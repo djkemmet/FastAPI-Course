@@ -29,9 +29,11 @@ class Book():
 
 # Create a data structure to hold the books in our API
 BOOKS = [
-    Book(1, 'Thought Reform and the Psychology of Totalism','Robert Jay Lifton', "Informed by Erik Erikson\'s concept of the formation of ego identity, this book, which first appreared in 1961, is an analysis of the experiences of fifteen Chinese citizens and twenty-five Westerners who underwent 'brainwashing' by the Communist Chinese government. Robert Lifton constructs these case histories through personal interviews and outlines a thematic pattern of death and rebirth, accompanied by feelings of guilt, that characterizes the process of 'thought reform.' In a new preface, Lifton addresses the implications of his model for the study of American religious cults.", 5 ),
-    Book(2, 'Ender\'s Game', 'Dude goes to space school to fight alien crickets.', 5),
-    Book(3, 'Harry Potter', "dude findss out he's magic, learns to harness his razzmataz with other magic children", 4),
+   Book(id=1, title="My Neat Book", author="Rob Tobulox", description="This is a description", rating=1),
+   Book(id=2, title="My Cool Book", author="Jurry Bobulox", description="This is a description", rating=5),
+   Book(id=3, title="My Keen Book", author="Felicity Glorgox", description="This is a description", rating=5),
+   Book(id=4, title="My Nifty Book", author="Michael Fremulon", description="This is a description", rating=5),
+   Book(id=5, title="My Swell Book", author="Turry Tobulox", description="This is a description", rating=5)
 ]
 
 
