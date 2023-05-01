@@ -54,7 +54,13 @@ async def read_author_category_by_query(book_author: str, category: str):
             books_to_return.append(book)
     return books_to_return
 
-
+@app.get("/books/books_by_author/{book_author}")
+async def get_book_by_author(book_author: str):
+    books_to_return = []
+    for index in range(len(BOOKS)):
+        if BOOKS[index].get('author').casefold() == book_author.casefold():
+            books_to_return.append(BOOKS[index])
+    return books_to_return
 
 # Our first POST Function
 @app.post("/books/create_book")
@@ -74,4 +80,4 @@ async def delete_book(book_title: str):
         if BOOKS[i].get('title').casefold() == book_title.casefold():
             BOOKS.pop(i)
             break # Stop searching, we've done the deed.
-    
+
