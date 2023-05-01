@@ -28,7 +28,9 @@ async def read_all_books():
     return BOOKS
 
 
-@app.get("books/{dynamic_param}")
+@app.get("/books/{book_title}")
 # "dynamic_param: str" this is called TYPE HINTING
-async def get_book(dynamic_param: str):
-    return {'dynamic param': dynamic_param}
+async def get_book(book_title: str):
+    for book in BOOKS:
+        if book.get("title").casefold() == book_title.casefold():
+            return book
