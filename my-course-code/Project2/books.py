@@ -55,9 +55,13 @@ class BookRequest(BaseModel):
 BOOKS = [
    Book(id=1, title="My Neat Book", author="Rob Tobulox", description="This is a description", rating=1),
    Book(id=2, title="My Cool Book", author="Jurry Bobulox", description="This is a description", rating=5),
-   Book(id=3, title="My Keen Book", author="Felicity Glorgox", description="This is a description", rating=5),
-   Book(id=4, title="My Nifty Book", author="Michael Fremulon", description="This is a description", rating=5),
-   Book(id=5, title="My Swell Book", author="Turry Tobulox", description="This is a description", rating=5)
+   Book(id=3, title="My Keen Book", author="Felicity Glorgox", description="This is a description", rating=4),
+   Book(id=4, title="My Nifty Book", author="Michael Fremulon", description="This is a description", rating=4),
+   Book(id=5, title="My Radical Book", author="Prassad Gorbechav", description="This is a description", rating=5),
+   Book(id=6, title="My Awesome Book", author="Justice Northwind", description="This is a description", rating=3),
+   Book(id=7, title="My Mighty Book", author="Constantine Frindle", description="This is a description", rating=2),
+   Book(id=8, title="My Boring Book", author="Bobulox Arzronand", description="This is a description", rating=5)
+
 ]
 
 
@@ -66,12 +70,20 @@ BOOKS = [
 async def read_all_books():
     return BOOKS
 
-@ app.get("/books/{id}")
+@app.get("/books/{id}")
 async def get_book_by_ID(id: int):
     for book in BOOKS:
         if book.id == id:
             return book
     
+@app.get("/books_by_rating/{book_rating}")
+async def get_book_by_rating(book_rating: int):
+    books_to_return = []
+    for book in BOOKS:
+        if book.rating == book_rating:
+            books_to_return.append(book)
+    return books_to_return
+
 
 @app.post("/create-book")
 async def create_book(book_request: BookRequest):
