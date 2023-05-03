@@ -66,6 +66,13 @@ BOOKS = [
 async def read_all_books():
     return BOOKS
 
+@ app.get("/books/{id}")
+async def get_book_by_ID(id: int):
+    for book in BOOKS:
+        if book.id == id:
+            return book
+    
+
 @app.post("/create-book")
 async def create_book(book_request: BookRequest):
     
@@ -75,6 +82,8 @@ async def create_book(book_request: BookRequest):
     # unpacked by the **
     new_book = Book(**book_request.dict())
     BOOKS.append(find_book_id(new_book))
+
+
 
 
 def find_book_id(book: Book):
