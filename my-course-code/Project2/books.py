@@ -1,6 +1,6 @@
 
 # Import the FastAPI Framework
-from fastapi import FastAPI, Body 
+from fastapi import FastAPI, Body, Path, Query, HTTPException
 from pydantic import BaseModel, Field
 from typing import Optional
 
@@ -40,7 +40,7 @@ class BookRequest(BaseModel):
     author: str = Field(min_length=1)
     description: str =  Field(min_length=1, max_length=100)
     rating: int = Field(gt=0, lt=6)
-    published_date: int = Field(gt=1600)
+    published_date: int
 
     class Config:
         schema_extra = {
@@ -75,13 +75,15 @@ async def read_all_books():
     return BOOKS
 
 @app.get("/books/{id}")
-async def get_book_by_ID(id: int):
+async def read_book(id: int = Path(gt = 0)):
     for book in BOOKS:
         if book.id == id:
             return book
+        
+    raise HTTPException(detail=f"A book with ID {id} was not found.", status_code=404)
     
 @app.get("/books_by_rating/{book_rating}")
-async def get_book_by_rating(book_rating: int):
+async def get_book_by_rating(book_rating: int = Path(gt=0, lt=6)):
     books_to_return = []
     for book in BOOKS:
         if book.rating == book_rating:
@@ -89,10 +91,10 @@ async def get_book_by_rating(book_rating: int):
     return books_to_return
 
 @app.get("/books/in-year/{year}")
-async def get_book_by_year(year: int):
+async def get_book_by_year(published_date: int = Query(gt=1999, lt=2031)):
     books_to_return = []
     for book_number in range(len(BOOKS)):
-        if BOOKS[book_number].published_date == year:
+        if BOOKS[book_number].published_date == published_date:
             books_to_return.add(BOOKS[book_number])
     return books_to_return
 
@@ -116,7 +118,9 @@ async def create_book(book_request: BookRequest):
 # This function needs to unpack the data from the body
 # into a BookRequest validator
 async def update_book(book: BookRequest):
-    
+    #Did our book change? 
+    book_changed = False
+
     # Iterate through our books
     for book_number in range(len(BOOKS)):
 
@@ -128,14 +132,21 @@ async def update_book(book: BookRequest):
             # Replace the data at that index, effectively 
             # updating the book.
             BOOKS[book_number] = book
+            book_changed = True
+    if not book_changed:
+        raise HTTPException(status_code=404, detail="Item not found.")
+
 
 @app.delete("/delete-book/{book_id}")
-async def delete_book(book_id: int):
+async def delete_book(book_id: int = Path(gt=0)):
+    book_changed = False
     print(f"Book ID is {book_id}")
     for book_number in range(len(BOOKS)):
-        print()
         if BOOKS[book_number].id == book_id:
             BOOKS.pop(book_number)
+            book_changed = True
+    if not book_changed:
+        raise HTTPException(status_code=404, detail="Item not found.")
 
 def find_book_id(book: Book):
     if len(BOOKS) > 0:
